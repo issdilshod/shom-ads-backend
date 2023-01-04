@@ -1,0 +1,103 @@
+openapi: 3.0.0
+info:
+  title: Shom ads API
+  description: Official Shom ads API documentation
+  version: 0.1.9
+
+servers:
+  - url: http://localhost/shom/ads/backend/public/api
+    description: local server
+  - url: http://producation.app/api
+    description: production server
+
+paths:
+  /user:
+    get:
+      tags:
+        - Account
+      summary: list of users
+      description: list of users
+      operationId: userIndex
+      responses:
+        '200': 
+          description: successful
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/userGet'
+        '403':
+          description: permission       
+        '404':
+          description: not found
+  /user/{userId}:
+    get:
+      tags:
+        - Account
+      summary: user by id
+      description: user by id
+      operationId: userShow
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/userGet' 
+        '403':
+          description: permission
+        '404':
+          description: not found
+  
+components:
+  schemas:
+    userGet:
+      type: object
+      properties:
+        id:
+          type: string
+        role:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+        phone:
+          type: string
+        phone_verified_at:
+          format: date-time
+        email:
+          type: string
+        email_verified_at:
+          format: date-time
+        last_seen:
+          format: date-time
+        status:
+          type: integer
+        created_at:
+          format: date-time
+        updated_at:
+          format: date-time
+    userPost:
+      type: object
+      properties:
+        role:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+      required:
+        - first_name
+        - last_name
+
+
