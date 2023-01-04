@@ -12,6 +12,36 @@ servers:
 
 paths:
   /user:
+    post:
+      tags:
+        - Account
+      summary: store user
+      description: store user
+      operationId: userStore
+      requestBody:
+        description: create a new user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userPost'
+        required: true
+      responses:
+        '200': 
+          description: successful
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/userGet'
+        '403':
+          description: permission       
+        '404':
+          description: not found
+        '409':
+          description: conflict
+        '422':
+          description: validation
     get:
       tags:
         - Account
@@ -32,12 +62,26 @@ paths:
         '404':
           description: not found
   /user/{userId}:
-    get:
+    put:
       tags:
         - Account
-      summary: user by id
-      description: user by id
-      operationId: userShow
+      summary: user update
+      description: user update
+      operationId: userUpdate
+      parameters:
+        - name: userId
+          in: path
+          description: id of user update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: update a user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userPost'
+        required: true
       responses:
         '200':
           description: successful
@@ -49,7 +93,55 @@ paths:
           description: permission
         '404':
           description: not found
-  
+        '409':
+          description: conflict
+        '422':
+          description: content
+    get:
+      tags:
+        - Account
+      summary: user by id
+      description: user by id
+      operationId: userShow
+      parameters:
+        - name: userId
+          in: path
+          description: id of user
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/userGet' 
+        '403':
+          description: permission
+        '404':
+          description: not found
+    delete:
+      tags:
+        - Account
+      summary: user delete
+      description: user delete
+      operationId: userDestroy
+      parameters:
+        - name: userId
+          in: path
+          description: id of user delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful 
+        '403':
+          description: permission
+        '404':
+          description: not found
+
 components:
   schemas:
     userGet:
@@ -85,12 +177,14 @@ components:
       type: object
       properties:
         role:
-          type: string
+          type: integer
         first_name:
           type: string
         last_name:
           type: string
         username:
+          type: string
+        password:
           type: string
         phone:
           type: string
