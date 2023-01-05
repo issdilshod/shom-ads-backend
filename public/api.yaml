@@ -11,6 +11,51 @@ servers:
     description: production server
 
 paths:
+  /auth/signin:
+    post:
+      tags:
+        - Account
+      summary: sign in
+      description: sign in
+      operationId: authSingin
+      requestBody:
+        description: sign in
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signin'
+        required: true
+      responses:
+        '200': 
+          description: successful
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/accessToken'     
+        '404':
+          description: not found
+        '422':
+          description: validation
+  /auth/isauth:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Account
+      summary: is auth
+      description: is auth
+      operationId: authIsauth
+      responses:
+        '200': 
+          description: successful 
+        '401':
+          description: not auth   
+        '404':
+          description: not found
+        '422':
+          description: validation
   /user:
     post:
       security:
@@ -151,19 +196,21 @@ paths:
           description: permission
         '404':
           description: not found
-  /auth/signin:
+  /partner:
     post:
+      security:
+        - bearerAuth: []
       tags:
-        - Account
-      summary: sign in
-      description: sign in
-      operationId: authSingin
+        - Partner
+      summary: store partner
+      description: store partner
+      operationId: partnerStore
       requestBody:
-        description: sign in
+        description: create a new partner
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/signin'
+              $ref: '#/components/schemas/partnerPost'
         required: true
       responses:
         '200': 
@@ -173,32 +220,147 @@ paths:
               schema: 
                 type: array
                 items: 
-                  $ref: '#/components/schemas/accessToken'     
+                  $ref: '#/components/schemas/partnerGet'
+        '403':
+          description: permission       
         '404':
           description: not found
+        '409':
+          description: conflict
         '422':
           description: validation
-  /auth/isauth:
     get:
       security:
         - bearerAuth: []
       tags:
-        - Account
-      summary: is auth
-      description: is auth
-      operationId: authIsauth
+        - Partner
+      summary: list of partners
+      description: list of partners
+      operationId: partnerIndex
       responses:
         '200': 
-          description: successful 
-        '401':
-          description: not auth   
+          description: successful
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/partnerGet'
+        '403':
+          description: permission       
         '404':
           description: not found
+  /partner/{partnerId}:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Partner
+      summary: partner update
+      description: partner update
+      operationId: partnerUpdate
+      parameters:
+        - name: partnerId
+          in: path
+          description: id of partner update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: update a partner
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/partnerPost'
+        required: true
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/partnerGet' 
+        '403':
+          description: permission
+        '404':
+          description: not found
+        '409':
+          description: conflict
         '422':
-          description: validation
-
+          description: content
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Partner
+      summary: partner by id
+      description: partner by id
+      operationId: partnerShow
+      parameters:
+        - name: partnerId
+          in: path
+          description: id of partner
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/partnerGet' 
+        '403':
+          description: permission
+        '404':
+          description: not found
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Partner
+      summary: partner delete
+      description: partner delete
+      operationId: partnerDestroy
+      parameters:
+        - name: partnerId
+          in: path
+          description: id of partner delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful 
+        '403':
+          description: permission
+        '404':
+          description: not found
+         
 components:
   schemas:
+    accessToken:
+      type: object
+      properties:
+        user_id:
+          type: string
+        token:
+          type: string
+        ip:
+          type: string
+        device:
+          type: string
+        expired_at:
+          type: string
+        updated_at:
+          type: string
+    signin:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
     userGet:
       type: object
       properties:
@@ -248,28 +410,42 @@ components:
       required:
         - first_name
         - last_name
-    accessToken:
+    partnerGet:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        created_at:
+          format: date-time
+        updated_at:
+          format: date-time
+    partnerPost:
       type: object
       properties:
         user_id:
           type: string
-        token:
+        name:
           type: string
-        ip:
+        description:
           type: string
-        device:
+        phone:
           type: string
-        expired_at:
+        address:
           type: string
-        updated_at:
-          type: string
-    signin:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
+      required:
+        - name
+        - phone
+        - address
   securitySchemes:
     bearerAuth:
       type: http

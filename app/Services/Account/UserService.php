@@ -25,6 +25,10 @@ class UserService extends Service{
         $user = User::where('deleted_at', null)
                     ->where('id', $userId)
                     ->first();
+
+        if ($user==null){
+            return response()->json(['msg' => 'not found'], 404);
+        }
         
         return new UserResource($user);
     }
