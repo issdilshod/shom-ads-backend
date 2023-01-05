@@ -141,6 +141,33 @@ paths:
           description: permission
         '404':
           description: not found
+  /auth/signin:
+    post:
+      tags:
+        - Account
+      summary: sign in
+      description: sign in
+      operationId: authSingin
+      requestBody:
+        description: sign in
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signin'
+        required: true
+      responses:
+        '200': 
+          description: successful
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/accessToken'     
+        '404':
+          description: not found
+        '422':
+          description: validation
 
 components:
   schemas:
@@ -193,5 +220,25 @@ components:
       required:
         - first_name
         - last_name
-
-
+    accessToken:
+      type: object
+      properties:
+        user_id:
+          type: string
+        token:
+          type: string
+        ip:
+          type: string
+        device:
+          type: string
+        expired_at:
+          type: string
+        updated_at:
+          type: string
+    signin:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string

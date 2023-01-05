@@ -31,6 +31,9 @@ class UserService extends Service{
 
     public function create($user)
     {
+        $exist = $this->exist($user);
+        if ($exist){ return response()->json(['msg'=> 'conflict'], 409); }
+
         $user = User::create($user);
 
         return new UserResource($user);
@@ -61,7 +64,7 @@ class UserService extends Service{
             ->update(['deleted_at' => Carbon::now()]);
     }
 
-    public function exist($user, $userId)
+    public function exist($user, $userId = '')
     {
         $user = User::where('deleted_at', null)
                     ->when(isset($user['username']), function($q) use($user){
@@ -73,7 +76,9 @@ class UserService extends Service{
                     ->when(isset($user['email']), function($q) use($user){
                         $q->where('email', $user['email']);
                     })
-                    ->where('id', '!=', $userId)
+                    ->when($userId!='', function ($q) use($userId){
+                        $q->where('id', '!=', $userId);
+                    })
                     ->first();
         if ($user==null){
             return false;
