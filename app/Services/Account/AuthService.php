@@ -5,6 +5,7 @@ namespace App\Services\Account;
 use App\Http\Resources\Account\AccessTokenResource;
 use App\Models\Account\AccessToken;
 use App\Models\Account\User;
+use App\Services\Helpers\UserDetectService;
 use App\Services\Service;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
@@ -26,8 +27,8 @@ class AuthService extends Service{
         $accessToken = AccessToken::create([
             'user_id' => $user->id,
             'token' => Str::random(Config::get('auth.tokens.length')),
-            'ip' => '',
-            'device' => '',
+            'ip' => UserDetectService::ip(),
+            'device' => UserDetectService::device_full(),
             'expired_at' => Carbon::now()->addDays(Config::get('auth.tokens.expired_day')),
         ]);
 
@@ -35,11 +36,6 @@ class AuthService extends Service{
     }
 
     public function signup()
-    {
-        //
-    }
-
-    public function isauth()
     {
         //
     }

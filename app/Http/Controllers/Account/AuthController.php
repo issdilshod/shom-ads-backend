@@ -30,9 +30,10 @@ class AuthController extends Controller
         //
     }
 
-    public function isauth(Request $request)
+    public function isauth()
     {
-        //
+        // NOTE: Checking on auth middleware
+        return response()->json(['msg' => 'success'], 200);
     }
 
 }
