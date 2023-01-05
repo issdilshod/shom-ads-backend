@@ -13,6 +13,8 @@ servers:
 paths:
   /user:
     post:
+      security:
+        - bearerAuth: []
       tags:
         - Account
       summary: store user
@@ -43,6 +45,8 @@ paths:
         '422':
           description: validation
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Account
       summary: list of users
@@ -63,6 +67,8 @@ paths:
           description: not found
   /user/{userId}:
     put:
+      security:
+        - bearerAuth: []
       tags:
         - Account
       summary: user update
@@ -98,6 +104,8 @@ paths:
         '422':
           description: content
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Account
       summary: user by id
@@ -122,6 +130,8 @@ paths:
         '404':
           description: not found
     delete:
+      security:
+        - bearerAuth: []
       tags:
         - Account
       summary: user delete
@@ -170,6 +180,8 @@ paths:
           description: validation
   /auth/isauth:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Account
       summary: is auth
@@ -258,3 +270,7 @@ components:
           type: string
         password:
           type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
