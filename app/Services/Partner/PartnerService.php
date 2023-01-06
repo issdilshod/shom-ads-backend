@@ -57,7 +57,7 @@ class PartnerService extends Service{
 
         $partnerOriginal->update($partner);
         
-        return new PartnerResource($partner);
+        return new PartnerResource($partnerOriginal);
     }
 
     public function delete($partnerId)

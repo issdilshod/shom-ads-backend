@@ -58,7 +58,7 @@ class UserService extends Service{
 
         $userOriginal->update($user);
         
-        return new UserResource($user);
+        return new UserResource($userOriginal);
     }
 
     public function delete($userId)

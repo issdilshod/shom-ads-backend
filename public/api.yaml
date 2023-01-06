@@ -336,7 +336,147 @@ paths:
           description: permission
         '404':
           description: not found
-         
+  /ad/category:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Ad
+      summary: store category
+      description: store category
+      operationId: categoryStore
+      requestBody:
+        description: create a new category
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/categoryPost'
+        required: true
+      responses:
+        '200': 
+          description: successful
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/categoryGet'
+        '403':
+          description: permission       
+        '404':
+          description: not found
+        '409':
+          description: conflict
+        '422':
+          description: validation
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Ad
+      summary: list of categories
+      description: list of categories
+      operationId: categoryIndex
+      responses:
+        '200': 
+          description: successful
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/categoryGet'
+        '403':
+          description: permission       
+        '404':
+          description: not found
+  /ad/category/{categoryId}:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Ad
+      summary: category update
+      description: category update
+      operationId: categoryUpdate
+      parameters:
+        - name: categoryId
+          in: path
+          description: id of category update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: update a category
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/categoryPost'
+        required: true
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/categoryGet' 
+        '403':
+          description: permission
+        '404':
+          description: not found
+        '409':
+          description: conflict
+        '422':
+          description: content
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Ad
+      summary: category by id
+      description: category by id
+      operationId: categoryShow
+      parameters:
+        - name: categoryId
+          in: path
+          description: id of category
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/categoryGet' 
+        '403':
+          description: permission
+        '404':
+          description: not found
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Ad
+      summary: category delete
+      description: category delete
+      operationId: categoryDestroy
+      parameters:
+        - name: categoryId
+          in: path
+          description: id of category delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful 
+        '403':
+          description: permission
+        '404':
+          description: not found
+
 components:
   schemas:
     accessToken:
@@ -446,6 +586,30 @@ components:
         - name
         - phone
         - address
+    categoryGet:
+      type: object
+      properties:
+        id:
+          type: string
+        belong_id:
+          type: string
+        name:
+          type: string
+        parent_id:
+          type: string
+        created_at:
+          format: date-time
+        updated_at:
+          format: date-time
+    categoryPost:
+      type: object
+      properties:
+        name:
+          type: string
+        parent_id:
+          type: string
+      required:
+        - name
   securitySchemes:
     bearerAuth:
       type: http
