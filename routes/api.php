@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Account\AuthController;
 use App\Http\Controllers\Account\UserController;
+use App\Http\Controllers\Ad\AdController;
 use App\Http\Controllers\Ad\CategoryController;
 use App\Http\Controllers\Partner\PartnerController;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,12 @@ Route::middleware(['auth.bearer'])->group(function (){
     Route::post('/ad/category', [CategoryController::class, 'store']);
     Route::put('/ad/category/{id}', [CategoryController::class, 'update']);
     Route::delete('/ad/category/{id}', [CategoryController::class, 'destroy']);
+
+    Route::get('/ad/ad', [AdController::class, 'index']);
+    Route::get('/ad/ad/{id}', [AdController::class, 'show']);
+    Route::post('/ad/ad', [AdController::class, 'store']);
+    Route::put('/ad/ad/{id}', [AdController::class, 'update']);
+    Route::delete('/ad/ad/{id}', [AdController::class, 'destroy']);
     
 });
 

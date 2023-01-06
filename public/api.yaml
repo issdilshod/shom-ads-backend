@@ -476,6 +476,146 @@ paths:
           description: permission
         '404':
           description: not found
+  /ad/ad:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Ad
+      summary: store ad
+      description: store ad
+      operationId: adStore
+      requestBody:
+        description: create a new ad
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/adPost'
+        required: true
+      responses:
+        '200': 
+          description: successful
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/adGet'
+        '403':
+          description: permission       
+        '404':
+          description: not found
+        '409':
+          description: conflict
+        '422':
+          description: validation
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Ad
+      summary: list of ads
+      description: list of ads
+      operationId: adIndex
+      responses:
+        '200': 
+          description: successful
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/adGet'
+        '403':
+          description: permission       
+        '404':
+          description: not found
+  /ad/ad/{adId}:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Ad
+      summary: ad update
+      description: ad update
+      operationId: adUpdate
+      parameters:
+        - name: adId
+          in: path
+          description: id of ad update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: update an ad
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/adPost'
+        required: true
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/adGet' 
+        '403':
+          description: permission
+        '404':
+          description: not found
+        '409':
+          description: conflict
+        '422':
+          description: content
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Ad
+      summary: ad by id
+      description: ad by id
+      operationId: adShow
+      parameters:
+        - name: adId
+          in: path
+          description: id of ad
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/adGet' 
+        '403':
+          description: permission
+        '404':
+          description: not found
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Ad
+      summary: ad delete
+      description: ad delete
+      operationId: adDestroy
+      parameters:
+        - name: adId
+          in: path
+          description: id of ad delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful 
+        '403':
+          description: permission
+        '404':
+          description: not found
 
 components:
   schemas:
@@ -610,6 +750,55 @@ components:
           type: string
       required:
         - name
+    adGet:
+      type: object
+      properties:
+        partner_id:
+          type: string
+        category_id:
+          type: string
+        text:
+          type: string
+        phone1:
+          type: string
+        phone2:
+          type: string
+        day:
+          type: integer
+        bonus:
+          type: integer
+        price:
+          type: number
+        created_at:
+          format: date-time
+        updated_at:
+          format: date-time
+    adPost:
+      type: object
+      properties:
+        partner_id:
+          type: string
+        category_id:
+          type: string
+        text:
+          type: string
+        phone1:
+          type: string
+        phone2:
+          type: string
+        day:
+          type: integer
+        bonus:
+          type: integer
+        price:
+          type: number
+      required:
+        - partner_id
+        - category_id
+        - text
+        - phone1
+        - day
+
   securitySchemes:
     bearerAuth:
       type: http
